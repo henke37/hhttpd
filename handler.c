@@ -215,9 +215,11 @@ void handleRequest(struct request *request) {
 
 	guessMime(request);
 
-	setLastModifiedHeader(request);
+	if (request->isFileReply) {
+		setLastModifiedHeader(request);
+		checkIfModifiedSince(request);
+	}
 
-	checkIfModifiedSince(request);
 
 handleRequestCleanup:
 	if(fileName) {
