@@ -245,10 +245,6 @@ static int checkIfModifiedSince(struct request * request) {
 	if (fileTime > checkTime) return 0;
 
 	request->replyCode=304;
-	closeNativeFile(request->replyFile);
-	request->replyFile=NULL;
-	request->replyBodySize=0;
-	request->isFileReply = 0;
 	return 1;
 }
 
