@@ -32,3 +32,5 @@
 Thumbs.db
 *.sdf
 *.vcxproj.user
+/Debug
+/.vs
