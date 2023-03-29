@@ -158,7 +158,7 @@ void handleRequest(struct request *request) {
 	}
 
 	header=findRequestHeader(request,"Expect");
-	if(header) {
+	if(header && strcmp(header->value,"100-continue") != 0) {
 		setupErrorPage(request,417);
 		goto handleRequestCleanup;
 	}
