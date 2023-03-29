@@ -137,6 +137,11 @@ void handleRequest(struct request *request) {
 		goto handleRequestCleanup;
 	}
 
+	if (request->client->version.minor > 0 && !findRequestHeader(request, "Host")) {
+		setupErrorPage(request, 400);
+		goto handleRequestCleanup;
+	}
+
 	if(request->requestMethod!=GET && request->requestMethod!=HEAD) {
 		setupErrorPage(request,501);
 		goto handleRequestCleanup;
