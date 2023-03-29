@@ -234,23 +234,22 @@ static int checkIfModifiedSince(struct request * request) {
 
 
 	ifmodified=findRequestHeader(request,"If-Modified-Since");
-	if(ifmodified) {
-		checkTime=parseHeaderTimeValue(ifmodified->value);
+	if(!ifmodified) return 0;
 
-		fileTime_tm=lastModifiedTime(request->replyFile);
+	checkTime=parseHeaderTimeValue(ifmodified->value);
 
-		fileTime=mktime(&fileTime_tm);
+	fileTime_tm=lastModifiedTime(request->replyFile);
 
-		if(fileTime<=checkTime) {
-			request->replyCode=304;
-			closeNativeFile(request->replyFile);
-			request->replyFile=NULL;
-			request->replyBodySize=0;
-			return 1;
-		}
-	}
-	
-	return 0;
+	fileTime=mktime(&fileTime_tm);
+
+	if (fileTime > checkTime) return 0;
+
+	request->replyCode=304;
+	closeNativeFile(request->replyFile);
+	request->replyFile=NULL;
+	request->replyBodySize=0;
+	request->isFileReply = 0;
+	return 1;
 }
 
 static void convertSlashes(char *path) {
